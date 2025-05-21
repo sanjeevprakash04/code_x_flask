@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="inv-navbar">
+    <div class="inv-navbar-left">
+        <h3 class="inv-app-title">Configuration</h3>
+    </div>
+</div>
+<div class="dashboard-content">
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'view')">View Table</button>
+        <button class="tab-button" onclick="openTab(event, 'add')">Add Data</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="view" class="tab-content" style="display: block;">
+        <div style="display: flex; justify-content: right; margin-top: 1rem;">
+            <button class="table-button">Save</button>
+            <button class="table-button" style="margin-left: 0.5rem">Delete</button>
+            <button class="table-button" style="margin-left: 0.5rem; margin-right: 0.5rem">Add Table</button>
+        </div>
+        <div class="inventory-table-wrapper" style="margin-top: 1rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>FunctionName</th>
+                        <th>FunctionDescription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- {% for row in function_blocks %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.FunctionName }}</td>
+                        <td>{{ row.FunctionDescription }}</td>
+                    </tr>
+                    {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="add" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: right; margin-top: 1rem;">
+            <select class="table-select">
+                <option>None</option>
+            </select>
+            <button class="table-button" style="margin-left: 0.5rem">Save</button>
+            <button class="table-button" style="margin-left: 0.5rem">Delete</button>
+            <button class="table-button" style="margin-left: 0.5rem">Show Data</button>
+            <button class="table-button" style="margin-left: 0.5rem; margin-right: 0.5rem">Insert</button>
+        </div>
+        <div class="inventory-table-wrapper" style="margin-top: 1rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Objects</th>
+                        <th>DefaultValues</th>
+                        <th>WorksheetColumnName</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Render empty table for adding new data -->
+                    <!-- {% for row in default_objects %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.Objects }}</td>
+                        <td>{{ row.DefaultValues }}</td>
+                        <td>{{ row.WorksheetColumnName }}</td>
+                    </tr>
+                    {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+    const contents = document.getElementsByClassName("tab-content");
+    const buttons = document.getElementsByClassName("tab-button");
+
+    // Hide all tabs
+    for (let i = 0; i < contents.length; i++) {
+        contents[i].style.display = "none";
+    }
+
+    // Remove active state from buttons
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+    }
+
+    // Show selected tab and mark button as active
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.classList.add("active");
+}
+</script>
+{% endblock %}
