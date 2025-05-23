@@ -70,7 +70,13 @@
                 <label>Generate PLC Function blocks</label>
                 <div class="generate-input-group" style="margin-left: 8rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -81,18 +87,30 @@
                     <input type="checkbox" id="optDB">
                     <label for="optDB" style="font-size: 0.9rem; font-weight: 600;">Optimized DB</label>
                 </div>
-                <div class="generate-input-group" style="margin-left: 1.9rem;">
+                <div class="generate-input-group" style="margin-left: 1.9rem;">                    
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
             </div>
             <div class="generate-block-row">
                 <label>Generate PLC Textlists</label>
-                <div class="generate-input-group" style="margin-left: 11.4rem;">
+                <div class="generate-input-group" style="margin-left: 11.4rem;">                    
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -111,7 +129,13 @@
                 <label>Generate HMI Tag</label>
                 <div class="generate-input-group" style="margin-left: 13.5rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -120,7 +144,13 @@
                 <label>Generate HMI Textlists</label>
                 <div class="generate-input-group" style="margin-left: 11.5rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -139,7 +169,13 @@
                 <label>Export SQL Database File</label>
                 <div class="generate-input-group" style="margin-left: 10rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        {% if Data %}
+                            {% for item in Data %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">None</option>
+                        {% endif %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
