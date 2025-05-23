@@ -27,3 +27,14 @@ def dfUser():
     df.columns = ['Id', 'Username', 'Role', 'LastLogin']
     df = df.sort_values(by='Id', ascending=True)
     return df
+
+
+
+def sqlite():
+    conn = sqlite3.connect('CodeX-Config.db')
+    cursorRead = conn.cursor()
+    cursorWrite = conn.cursor()
+    engine = create_engine('sqlite:///CodeX-Config.db')
+    engineConRead = engine.connect()
+    engineConWrite = engine.connect()
+    return cursorRead, cursorWrite, engineConRead, engineConWrite, conn
