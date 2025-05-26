@@ -50,7 +50,7 @@
                     <li class="{% if request.path == url_for('generate') %}active{% endif %}">
                         <a href="{{ url_for('generate') }}"><i class="bx bx-cog"></i> Generate</a>
                     </li>
-                    <li class="{% if request.path == url_for('configuration') %}active{% endif %}">
+                    <li class="{% if request.path.startswith('/configuration') %}active{% endif %}">
                         <a href="{{ url_for('configuration') }}"><i class="bx bx-wrench"></i> Configuration</a>
                     </li>
                     <li class="{% if request.path == url_for('about') %}active{% endif %}">
@@ -71,7 +71,7 @@
                     <li class="{% if request.path == url_for('generate') %}active{% endif %}">
                         <a href="{{ url_for('generate') }}"><i class="bx bx-cog"></i> Generate</a>
                     </li>
-                    <li class="{% if request.path == url_for('configuration') %}active{% endif %}">
+                    <li class="{% if request.path.startswith('/configuration') %}active{% endif %}">
                         <a href="{{ url_for('configuration') }}"><i class="bx bx-wrench"></i> Configuration</a>
                     </li>
                     <li class="{% if request.path == url_for('about') %}active{% endif %}">
@@ -261,7 +261,7 @@
     </script>
         
 
-    {% if user %}
+    <!-- {% if user %}
     <script>
         let inactivityTime = function () {
             let timer;
@@ -298,7 +298,7 @@
     
         inactivityTime();
     </script>
-    {% endif %}
+    {% endif %} -->
       
 </body>
 </html>

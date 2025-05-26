@@ -2,7 +2,7 @@ import sqlite3
 from werkzeug.security import generate_password_hash
 
 # Connect to DB
-conn = sqlite3.connect('code_x.db')
+conn = sqlite3.connect('CodeX-Config.db')
 cursor = conn.cursor()
 
 # Create table

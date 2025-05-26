@@ -70,7 +70,10 @@
                 <label>Generate PLC Function blocks</label>
                 <div class="generate-input-group" style="margin-left: 8rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -83,7 +86,10 @@
                 </div>
                 <div class="generate-input-group" style="margin-left: 1.9rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -92,7 +98,10 @@
                 <label>Generate PLC Textlists</label>
                 <div class="generate-input-group" style="margin-left: 11.4rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -111,7 +120,10 @@
                 <label>Generate HMI Tag</label>
                 <div class="generate-input-group" style="margin-left: 13.5rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -120,7 +132,10 @@
                 <label>Generate HMI Textlists</label>
                 <div class="generate-input-group" style="margin-left: 11.5rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -139,7 +154,10 @@
                 <label>Export SQL Database File</label>
                 <div class="generate-input-group" style="margin-left: 10rem;">
                     <select class="generate-select-small">
-                        <option>None</option>
+                        <option value="">None</option>
+                        {% for func in function_list %}
+                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
+                        {% endfor %}
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>

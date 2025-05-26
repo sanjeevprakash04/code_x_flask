@@ -8,76 +8,20 @@
 <div class="dashboard-content">
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-button active" onclick="openTab(event, 'view')">View Table</button>
-        <button class="tab-button" onclick="openTab(event, 'add')">Add Data</button>
+        <button class="tab-button {% if tab == 'view' %}active{% endif %}"><a href="{{ url_for('configuration_tab', tab='view') }}" style="text-decoration: none; color: #005da2;">View Table</a></button>
+        <button class="tab-button {% if tab == 'add' %}active{% endif %}"><a href="{{ url_for('configuration_tab', tab='add') }}" style="text-decoration: none; color: #005da2;">Add Data</a></button>
     </div>
 
     <!-- Tab Contents -->
-    <div id="view" class="tab-content" style="display: block;">
-        <div style="display: flex; justify-content: right; margin-top: 1rem;">
-            <button class="table-button">Save</button>
-            <button class="table-button" style="margin-left: 0.5rem">Delete</button>
-            <button class="table-button" style="margin-left: 0.5rem; margin-right: 0.5rem">Add Table</button>
-        </div>
-        <div class="inventory-table-wrapper" style="margin-top: 1rem;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>FunctionName</th>
-                        <th>FunctionDescription</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- {% for row in function_blocks %}
-                    <tr>
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.FunctionName }}</td>
-                        <td>{{ row.FunctionDescription }}</td>
-                    </tr>
-                    {% endfor %} -->
-                </tbody>
-            </table>
-        </div>
+    <div id="view" class="tab-content" style="display: {% if tab == 'view' %}block{% else %}none{% endif %};">
+        {% block config_viewtable %}{% endblock %}
     </div>
 
-    <div id="add" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: right; margin-top: 1rem;">
-            <select class="table-select">
-                <option>None</option>
-            </select>
-            <button class="table-button" style="margin-left: 0.5rem">Save</button>
-            <button class="table-button" style="margin-left: 0.5rem">Delete</button>
-            <button class="table-button" style="margin-left: 0.5rem">Show Data</button>
-            <button class="table-button" style="margin-left: 0.5rem; margin-right: 0.5rem">Insert</button>
-        </div>
-        <div class="inventory-table-wrapper" style="margin-top: 1rem;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Objects</th>
-                        <th>DefaultValues</th>
-                        <th>WorksheetColumnName</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Render empty table for adding new data -->
-                    <!-- {% for row in default_objects %}
-                    <tr>
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.Objects }}</td>
-                        <td>{{ row.DefaultValues }}</td>
-                        <td>{{ row.WorksheetColumnName }}</td>
-                    </tr>
-                    {% endfor %} -->
-                </tbody>
-            </table>
-        </div>
+    <div id="add" class="tab-content" style="display: {% if tab == 'add' %}block{% else %}none{% endif %};">
+        {% block config_addtabledata %}{% endblock %}
     </div>
 </div>
-
-<script>
+<!-- <script>
 function openTab(evt, tabName) {
     const contents = document.getElementsByClassName("tab-content");
     const buttons = document.getElementsByClassName("tab-button");
@@ -96,5 +40,5 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.classList.add("active");
 }
-</script>
+</script> -->
 {% endblock %}
