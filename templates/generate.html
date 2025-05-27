@@ -170,28 +170,40 @@
     </div>
 </div>
 
-<!-- Scripts -->
 <script>
-function switchTab(evt, tabId) {
-    document.querySelectorAll(".tab-content-generate").forEach(tab => tab.style.display = "none");
-    document.querySelectorAll(".generate-tab").forEach(btn => btn.classList.remove("active"));
-    document.getElementById(tabId).style.display = "block";
-    evt.currentTarget.classList.add("active");
-    document.getElementById("upload-plc").style.display = tabId === "plc-tab" ? "block" : "none";
-    document.getElementById("upload-hmi").style.display = tabId === "hmi-tab" ? "block" : "none";
-    document.getElementById("upload-scada").style.display = tabId === "scada-tab" ? "block" : "none";
-}
+    function switchTab(evt, tabId) {
+        const allTabs = document.querySelectorAll(".tab-content-generate");
+        const allButtons = document.querySelectorAll(".generate-tab");
 
-// File upload logic
+        allTabs.forEach(tab => tab.style.display = "none");
+        allButtons.forEach(btn => btn.classList.remove("active"));
 
-document.addEventListener("DOMContentLoaded", () => {
-    const sections = ["plc", "hmi", "scada"];
+        document.getElementById(tabId).style.display = "block";
+        evt.currentTarget.classList.add("active");
 
-    sections.forEach(type => {
-        const fileInput = document.getElementById(`fileInput-${type}`);
-        const selectFiles = document.getElementById(`selectFiles-${type}`);
-        const dropArea = document.getElementById(`dropArea-${type}`);
-        const uploadedFiles = document.getElementById(`uploadedFiles-${type}`);
+        document.getElementById("upload-plc").style.display = tabId === "plc-tab" ? "block" : "none";
+        document.getElementById("upload-hmi").style.display = tabId === "hmi-tab" ? "block" : "none";
+        document.getElementById("upload-scada").style.display = tabId === "scada-tab" ? "block" : "none";
+    }
+
+    function changePLC(step) {
+        const input = document.getElementById("plcNumber");
+        let value = parseInt(input.value) || 1;
+        value += step;
+        if (value < 1) value = 1;
+        input.value = value;
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = ["plc", "hmi", "scada"];
+
+        sections.forEach(type => {
+            const fileInput = document.getElementById(`fileInput-${type}`);
+            const selectFiles = document.getElementById(`selectFiles-${type}`);
+            const dropArea = document.getElementById(`dropArea-${type}`);
+            const uploadedFiles = document.getElementById(`uploadedFiles-${type}`);
 
             // Upload via button
             selectFiles.addEventListener("click", (event) => {
@@ -245,20 +257,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
                 }
 
-            const fileItem = document.createElement("div");
-            fileItem.classList.add("file-item");
-            fileItem.dataset.filename = fileName;
-            fileItem.innerHTML = `
-                ${iconHTML}
-                <div class="file-details">
-                    <div class="file-name">${fileName}</div>
-                    <div class="file-size">${fileSize}</div>
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-                <button class="remove-btn">×</button>
-            `;
+                const fileItem = document.createElement("div");
+                fileItem.classList.add("file-item");
+                fileItem.dataset.filename = fileName;
+                fileItem.innerHTML = `
+                    ${iconHTML}
+                    <div class="file-details">
+                        <div class="file-name">${fileName}</div>
+                        <div class="file-size">${fileSize}</div>
+                        <div class="progress-bar"><div class="progress-fill"></div></div>
+                    </div>
+                    <button class="remove-btn">×</button>
+                `;
 
-            targetElement.appendChild(fileItem);
+                targetElement.appendChild(fileItem);
 
                 fileItem.querySelector(".remove-btn").addEventListener("click", () => {
                     targetElement.removeChild(fileItem);

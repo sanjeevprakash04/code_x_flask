@@ -334,61 +334,6 @@ def load_user():
 @app.context_processor
 def inject_user():
     return dict(user=session.get('username'), role=session.get('role'))
-
-@app.route('/export_logix_rungs_sie', methods=['POST'])
-def export_logix():
-    data = request.get_json()
-    nr = data.get("plc_nr")
-    selection_module = data.get("selection_module")
-    df_data = data.get("df_data")
-
-    if df_data is None:
-        return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
-
-    # Convert JSON to DataFrame
-    df = pd.DataFrame(df_data)
-
-    result = plc._exportLogixRungsSie(nr, selection_module, df)
-    return jsonify(result)
-
-
-@app.route("/export/db", methods=["POST"])
-def export_db():
-    data = request.get_json()
-    nr = data.get("plc_nr")
-    selection_module = data.get("selection_module")
-    df_data = data.get("df_data")
-    cmd_optimized_db = data.get("cmd_optimized_db", False)
-
-    df = pd.DataFrame(df_data)
-    result = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
-    return jsonify(result)
-
-@app.route("/export/textlist", methods=["POST"])
-def export_textlist():
-    data = request.get_json()
-    nr = data.get("plc_nr")
-    selection_module = data.get("selection_module")
-    df_data = data.get("df_data")
-
-    df = pd.DataFrame(df_data)
-    result = plc._exportPlcTextlistSie(nr, selection_module, df)
-    return jsonify(result)
-
-
-@app.route('/upload_excel', methods=['POST'])
-def upload_excel():
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part in request'}), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message': 'No selected file'}), 400
-
-    try:
-        df = pd.read_excel(file)
-        return jsonify({'data': df.to_dict(orient='records')})
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
     
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
