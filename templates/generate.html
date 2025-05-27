@@ -153,6 +153,7 @@
     </div>
 </div>
 
+<!-- Scripts -->
 <script>
 function switchTab(evt, tabId) {
     document.querySelectorAll(".tab-content-generate").forEach(tab => tab.style.display = "none");
@@ -164,11 +165,8 @@ function switchTab(evt, tabId) {
     document.getElementById("upload-scada").style.display = tabId === "scada-tab" ? "block" : "none";
 }
 
-// File upload logic
-
 document.addEventListener("DOMContentLoaded", () => {
     const sections = ["plc", "hmi", "scada"];
-
     sections.forEach(type => {
         const fileInput = document.getElementById(`fileInput-${type}`);
         const selectFiles = document.getElementById(`selectFiles-${type}`);
@@ -232,7 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <button class="remove-btn">×</button>
             `;
-
             targetElement.appendChild(fileItem);
 
             fileItem.querySelector(".remove-btn").addEventListener("click", () => {

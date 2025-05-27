@@ -1,0 +1,186 @@
+FUNCTION_BLOCK "All CM ILK"
+TITLE = Control module
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+ VAR
+   "udtInterlockRV01" : "APG Interlocks/Messages";
+   "udtInterlockRV02" : "APG Interlocks/Messages";
+   "udtInterlockRV03" : "APG Interlocks/Messages";
+   "udtInterlockSC04" : "APG Interlocks/Messages";
+   "udtInterlockSC05" : "APG Interlocks/Messages";
+   "udtInterlockSC06" : "APG Interlocks/Messages";
+   "udtInterlockBE07" : "APG Interlocks/Messages";
+   "udtInterlockBE08" : "APG Interlocks/Messages";
+   "udtInterlockBE09" : "APG Interlocks/Messages";
+   "udtInterlockDH201" : "APG Interlocks/Messages";
+   "udtInterlockDH202" : "APG Interlocks/Messages";
+ END_VAR
+
+
+BEGIN
+NETWORK
+TITLE = None - udtInterlockRV01 - RV01
+
+       CALL #"udtInterlockRV01"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockRV02 - RV02
+
+       CALL #"udtInterlockRV02"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockRV03 - RV03
+
+       CALL #"udtInterlockRV03"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockSC04 - SC04
+
+       CALL #"udtInterlockSC04"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockSC05 - SC05
+
+       CALL #"udtInterlockSC05"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockSC06 - SC06
+
+       CALL #"udtInterlockSC06"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockBE07 - BE07
+
+       CALL #"udtInterlockBE07"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockBE08 - BE08
+
+       CALL #"udtInterlockBE08"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockBE09 - BE09
+
+       CALL #"udtInterlockBE09"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockDH201 - DH201
+
+       CALL #"udtInterlockDH201"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+NETWORK
+TITLE = None - udtInterlockDH202 - DH202
+
+       CALL #"udtInterlockDH202"
+       (
+         bLockAbs01       := "dbGeneral".bEstopGeneral ,
+         iLockMsgAbs01       := "dbInterlockMesg"."Emergency Stop" ,
+         bLockAbs02       := "dbGeneral".bMaintenanceMode ,
+         iLockMsgAbs02       := "dbInterlockMesg"."Maintenance Mode active" ,
+         bLockAbs03       := "dbGeneral".bFaultMainAirpressure ,
+         bLockAbs04       := "dbGeneral".bTreadMode ,
+         iLockMsgAbs03       := "dbInterlockMesg"."Low air pressure" ,
+         iLockMsgAbs04       := "dbInterlockMesg"."Tread mode active" ,
+       );
+
+END_FUNCTION_BLOCK

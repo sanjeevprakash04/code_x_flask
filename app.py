@@ -275,7 +275,7 @@ def export_logix():
     nr = data.get("plc_nr")
     selection_module = data.get("selection_module")
     df_data = data.get("df_data")
-
+    print(df_data)
     if df_data is None:
         return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
 
@@ -319,7 +319,7 @@ def upload_excel():
         return jsonify({'message': 'No selected file'}), 400
 
     try:
-        df = pd.read_excel(file)
+        df = pd.read_excel(file, selectionModule, dtype=object)
         return jsonify({'data': df.to_dict(orient='records')})
     except Exception as e:
         return jsonify({'message': str(e)}), 500

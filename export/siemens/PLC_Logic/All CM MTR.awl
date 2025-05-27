@@ -1,0 +1,130 @@
+FUNCTION_BLOCK "All CM MTR"
+TITLE = Control module
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+ VAR
+   "M-120" : "CM MTR";
+   "P-340" : "CM MTR";
+   "P-868" : "CM MTR";
+   "P-838" : "CM MTR";
+   "P-738" : "CM MTR";
+   "P-708" : "CM MTR";
+ END_VAR
+
+
+BEGIN
+NETWORK
+TITLE = 2001 - M-120 - Agitator Start
+
+       CALL #"M-120"
+       (
+         CM_No       := 2001 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outM-120" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2001] ,
+       );
+
+NETWORK
+TITLE = 2002 - P-340 - Circulation pump
+
+       CALL #"P-340"
+       (
+         CM_No       := 2002 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outP-340" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2002] ,
+       );
+
+NETWORK
+TITLE = 2003 - P-868 - Antifoam Pump
+
+       CALL #"P-868"
+       (
+         CM_No       := 2003 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outP-868" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2003] ,
+       );
+
+NETWORK
+TITLE = 2004 - P-838 - Base Pump
+
+       CALL #"P-838"
+       (
+         CM_No       := 2004 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outP-838" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2004] ,
+       );
+
+NETWORK
+TITLE = 2005 - P-738 - Feed Pump
+
+       CALL #"P-738"
+       (
+         CM_No       := 2005 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outP-738" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2005] ,
+       );
+
+NETWORK
+TITLE = 2006 - P-708 - Innoculum Pump
+
+       CALL #"P-708"
+       (
+         CM_No       := 2006 ,
+         Area_No       := 11 ,
+         Tab       := 1 ,
+         SubTab       := 1 ,
+         Type       := 4 ,
+         RunFB       := None ,
+         Disconnect       := True ,
+         Safe       := True ,
+         DeAct_Standstill       := T#5s ,
+         OutFwd       := "outP-708" ,
+         SC_Local       := "P01".SC ,
+         CM_MTR        := "dbPlcHmiMTR".MTR[2006] ,
+       );
+
+END_FUNCTION_BLOCK
