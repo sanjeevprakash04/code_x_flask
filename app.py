@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, g, send_file
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 from io import BytesIO
 from datetime import datetime, timedelta
 import pandas as pd
@@ -10,6 +11,7 @@ from auth import authLog
 from config import sqliteConfig
 from modules import main, tableConfig
 from siemens import plc, hmi, scada
+
 app = Flask(__name__)
 app.secret_key = '4f3d6e9a5f4b1c8d7e6a2b3c9d0e8f1a5b7c2d4e6f9a1b3c8d0e6f2a9b1d3c4'
 
@@ -34,6 +36,70 @@ def generate():
     df = main.tbl_fun_View()
     function_list = df[['Id', 'FunctionName']].to_dict(orient='records')
     return render_template('generate.html', function_list=function_list)
+
+@app.route('/generate/fb', methods=['POST'])
+def generate_fb():
+    data = request.get_json()
+    nr = data.get("plc_nr")
+    selection_module = data.get("selection_module")
+    df_data = data.get("df_data")
+
+    if not nr or not selection_module:
+        return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
+
+    if df_data is None:
+        return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
+
+    try:
+        df = pd.DataFrame(df_data)
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Error converting JSON to DataFrame: {str(e)}"}), 500
+
+    result = plc._exportLogixRungsSie(nr, selection_module, df)
+    return jsonify(result)
+
+@app.route('/generate/db', methods=['POST'])
+def generate_db():
+    data = request.get_json()
+    nr = data.get("plc_nr")
+    selection_module = data.get("selection_module")
+    df_data = data.get("df_data")
+    cmd_optimized_db = data.get("cmd_optimized_db", False)
+
+    if not nr or not selection_module:
+        return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
+
+    if df_data is None:
+        return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
+
+    try:
+        df = pd.DataFrame(df_data)
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Error converting JSON to DataFrame: {str(e)}"}), 500
+
+    result = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
+    return jsonify(result)
+
+@app.route('/generate/textlist', methods=['POST'])
+def generate_textlist():
+    data = request.get_json()
+    nr = data.get("plc_nr")
+    selection_module = data.get("selection_module")
+    df_data = data.get("df_data")
+
+    if not nr or not selection_module:
+        return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
+
+    if df_data is None:
+        return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
+
+    try:
+        df = pd.DataFrame(df_data)
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Error converting JSON to DataFrame: {str(e)}"}), 500
+
+    result = plc._exportPlcTextlistSie(nr, selection_module, df)
+    return jsonify(result)
 
 @app.route('/configuration')
 def configuration():
@@ -275,7 +341,7 @@ def export_logix():
     nr = data.get("plc_nr")
     selection_module = data.get("selection_module")
     df_data = data.get("df_data")
-    print(df_data)
+
     if df_data is None:
         return jsonify({"status": "error", "message": "DataFrame is missing."}), 400
 
@@ -319,7 +385,7 @@ def upload_excel():
         return jsonify({'message': 'No selected file'}), 400
 
     try:
-        df = pd.read_excel(file, selectionModule, dtype=object)
+        df = pd.read_excel(file)
         return jsonify({'data': df.to_dict(orient='records')})
     except Exception as e:
         return jsonify({'message': str(e)}), 500
