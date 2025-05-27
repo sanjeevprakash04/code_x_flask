@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="inv-navbar">
-    <!-- Left side: menu + name -->
     <div class="inv-navbar-left">
         <span class="inv-app-title">Generate</span>
     </div>
 </div>
+
 <div class="generate-container">
-    <!-- Brand & PLC Number -->
     <div class="generate-top">
+        <!-- Brand & PLC Number -->
         <div class="generate-form">
             <div class="form-group-generate">
                 <label for="brand">Brand</label>
@@ -24,36 +24,19 @@
                 </div>
             </div>
         </div>
-        <!-- Upload Section for PLC -->
-        <div class="upload-section" id="upload-plc">
-            <div class="upload-box" id="dropArea-plc">
-                <p>upload PLC excel file</p>
+
+        <!-- Upload Sections -->
+        {% for section in ['plc', 'hmi', 'scada'] %}
+        <div class="upload-section" id="upload-{{ section }}" {% if section != 'plc' %} style="display: none;" {% endif %}>
+            <div class="upload-box" id="dropArea-{{ section }}">
+                <p>upload {{ section.upper() }} {% if section == 'scada' %}pdf{% else %}excel{% endif %} file</p>
                 <small>up to 50MB only</small>
-                <button class="upload-btn" id="selectFiles-plc">Upload File</button>
-                <input type="file" id="fileInput-plc" multiple accept=".xls,.xlsx" hidden>
+                <button class="upload-btn" id="selectFiles-{{ section }}">Upload File</button>
+                <input type="file" id="fileInput-{{ section }}" multiple accept="{% if section == 'scada' %}.pdf{% else %}.xls,.xlsx{% endif %}" hidden>
             </div>
-            <div id="uploadedFiles-plc" class="uploaded-files"></div>
+            <div id="uploadedFiles-{{ section }}" class="uploaded-files"></div>
         </div>
-        <!-- Upload Section for HMI -->
-        <div class="upload-section" id="upload-hmi" style="display: none;">
-            <div class="upload-box" id="dropArea-hmi">
-                <p>upload HMI excel file</p>
-                <small>up to 50MB only</small>
-                <button class="upload-btn" id="selectFiles-hmi">Upload File</button>
-                <input type="file" id="fileInput-hmi" multiple accept=".xls,.xlsx" hidden>
-            </div>
-            <div id="uploadedFiles-hmi" class="uploaded-files"></div>
-        </div>
-        <!-- Upload Section for SCADA -->
-        <div class="upload-section" id="upload-scada" style="display: none;">
-            <div class="upload-box" id="dropArea-scada">
-                <p>upload SCADA pdf file</p>
-                <small>up to 50MB only</small>
-                <button class="upload-btn" id="selectFiles-scada">Upload File</button>
-                <input type="file" id="fileInput-scada" multiple accept=".pdf" hidden>
-            </div>
-            <div id="uploadedFiles-scada" class="uploaded-files"></div>
-        </div>
+        {% endfor %}
     </div>
 
     <!-- Tabs -->
@@ -63,7 +46,7 @@
         <button class="generate-tab" onclick="switchTab(event, 'scada-tab')">SCADA</button>
     </div>
 
-    <!-- PLC Tab Content -->
+    <!-- PLC Tab -->
     <div id="plc-tab" class="tab-content-generate" style="display: block;">
         <div class="generate-blocks">
             <div class="generate-block-row">
@@ -113,7 +96,7 @@
         </div>
     </div>
 
-    <!-- HMI Tabs Placeholder -->
+    <!-- HMI Tab -->
     <div id="hmi-tab" class="tab-content-generate" style="display: none;">
         <div class="generate-blocks">
             <div class="generate-block-row">
@@ -147,7 +130,7 @@
         </div>
     </div>
 
-    <!-- SCADA Tabs Placeholder -->
+    <!-- SCADA Tab -->
     <div id="scada-tab" class="tab-content-generate" style="display: none;">
         <div class="generate-blocks">
             <div class="generate-block-row">
@@ -171,112 +154,92 @@
 </div>
 
 <script>
-    function switchTab(evt, tabId) {
-        const allTabs = document.querySelectorAll(".tab-content-generate");
-        const allButtons = document.querySelectorAll(".generate-tab");
+function switchTab(evt, tabId) {
+    document.querySelectorAll(".tab-content-generate").forEach(tab => tab.style.display = "none");
+    document.querySelectorAll(".generate-tab").forEach(btn => btn.classList.remove("active"));
+    document.getElementById(tabId).style.display = "block";
+    evt.currentTarget.classList.add("active");
+    document.getElementById("upload-plc").style.display = tabId === "plc-tab" ? "block" : "none";
+    document.getElementById("upload-hmi").style.display = tabId === "hmi-tab" ? "block" : "none";
+    document.getElementById("upload-scada").style.display = tabId === "scada-tab" ? "block" : "none";
+}
 
-        allTabs.forEach(tab => tab.style.display = "none");
-        allButtons.forEach(btn => btn.classList.remove("active"));
+// File upload logic
 
-        document.getElementById(tabId).style.display = "block";
-        evt.currentTarget.classList.add("active");
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = ["plc", "hmi", "scada"];
 
-        document.getElementById("upload-plc").style.display = tabId === "plc-tab" ? "block" : "none";
-        document.getElementById("upload-hmi").style.display = tabId === "hmi-tab" ? "block" : "none";
-        document.getElementById("upload-scada").style.display = tabId === "scada-tab" ? "block" : "none";
-    }
+    sections.forEach(type => {
+        const fileInput = document.getElementById(`fileInput-${type}`);
+        const selectFiles = document.getElementById(`selectFiles-${type}`);
+        const dropArea = document.getElementById(`dropArea-${type}`);
+        const uploadedFiles = document.getElementById(`uploadedFiles-${type}`);
 
-    function changePLC(step) {
-        const input = document.getElementById("plcNumber");
-        let value = parseInt(input.value) || 1;
-        value += step;
-        if (value < 1) value = 1;
-        input.value = value;
-    }
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const sections = ["plc", "hmi", "scada"];
-
-        sections.forEach(type => {
-            const fileInput = document.getElementById(`fileInput-${type}`);
-            const selectFiles = document.getElementById(`selectFiles-${type}`);
-            const dropArea = document.getElementById(`dropArea-${type}`);
-            const uploadedFiles = document.getElementById(`uploadedFiles-${type}`);
-
-            // Upload via button
-            selectFiles.addEventListener("click", (event) => {
-                event.stopPropagation();
-                fileInput.click();
-            });
-
-            // Drag events
-            dropArea.addEventListener("dragover", (event) => {
-                event.preventDefault();
-                dropArea.classList.add("dragover");
-            });
-
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.classList.remove("dragover");
-            });
-
-            dropArea.addEventListener("drop", (event) => {
-                event.preventDefault();
-                dropArea.classList.remove("dragover");
-                handleFileUpload(event.dataTransfer.files, uploadedFiles);
-            });
-
-            // File input change
-            fileInput.addEventListener("change", () => {
-                handleFileUpload(fileInput.files, uploadedFiles);
-            });
+        selectFiles.addEventListener("click", (e) => {
+            e.stopPropagation();
+            fileInput.click();
         });
 
-        function handleFileUpload(files, targetElement) {
-            for (let file of files) {
-                const fileName = file.name;
-                const fileType = fileName.split('.').pop().toLowerCase();
-                const fileSize = (file.size / (1024 * 1024)).toFixed(1) + "MB";
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.classList.add("dragover");
+        });
 
-                if ([...targetElement.children].some(item => item.dataset.filename === fileName)) {
-                    alert(`${fileName} is already uploaded.`);
-                    continue;
-                }
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("dragover");
+        });
 
-                let iconHTML = '';
-                let iconClass = 'bx bx-file';
-                let iconColor = '#007bff';
-                if (fileType === 'pdf') {
-                    iconClass = 'bx bxs-file-pdf';
-                    iconColor = '#e74c3c';
-                    iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
-                } else if (['xls', 'xlsx'].includes(fileType)) {
-                    iconHTML = `<img src="/static/icons/excel.png" alt="Excel" style="width: 24px; height: 24px; margin-right: 10px;">`;
-                } else {
-                    iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
-                }
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.classList.remove("dragover");
+            handleFileUpload(e.dataTransfer.files, uploadedFiles);
+        });
 
-                const fileItem = document.createElement("div");
-                fileItem.classList.add("file-item");
-                fileItem.dataset.filename = fileName;
-                fileItem.innerHTML = `
-                    ${iconHTML}
-                    <div class="file-details">
-                        <div class="file-name">${fileName}</div>
-                        <div class="file-size">${fileSize}</div>
-                        <div class="progress-bar"><div class="progress-fill"></div></div>
-                    </div>
-                    <button class="remove-btn">×</button>
-                `;
-
-                targetElement.appendChild(fileItem);
-
-                fileItem.querySelector(".remove-btn").addEventListener("click", () => {
-                    targetElement.removeChild(fileItem);
-                });
-            }
-        }
+        fileInput.addEventListener("change", () => {
+            handleFileUpload(fileInput.files, uploadedFiles);
+        });
     });
+
+    function handleFileUpload(files, targetElement) {
+        for (let file of files) {
+            const fileName = file.name;
+            const fileType = fileName.split('.').pop().toLowerCase();
+            const fileSize = (file.size / (1024 * 1024)).toFixed(1) + "MB";
+
+            if ([...targetElement.children].some(item => item.dataset.filename === fileName)) {
+                alert(`${fileName} is already uploaded.`);
+                continue;
+            }
+
+            let iconHTML = '';
+            if (fileType === 'pdf') {
+                iconHTML = `<i class="bx bxs-file-pdf" style="font-size: 1.8rem; color: #e74c3c; margin-right: 10px;"></i>`;
+            } else if (["xls", "xlsx"].includes(fileType)) {
+                iconHTML = `<img src="/static/icons/excel.png" alt="Excel" style="width: 24px; height: 24px; margin-right: 10px;">`;
+            } else {
+                iconHTML = `<i class="bx bx-file" style="font-size: 1.8rem; color: #007bff; margin-right: 10px;"></i>`;
+            }
+
+            const fileItem = document.createElement("div");
+            fileItem.classList.add("file-item");
+            fileItem.dataset.filename = fileName;
+            fileItem.innerHTML = `
+                ${iconHTML}
+                <div class="file-details">
+                    <div class="file-name">${fileName}</div>
+                    <div class="file-size">${fileSize}</div>
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+                <button class="remove-btn">×</button>
+            `;
+
+            targetElement.appendChild(fileItem);
+
+            fileItem.querySelector(".remove-btn").addEventListener("click", () => {
+                targetElement.removeChild(fileItem);
+            });
+        }
+    }
+});
 </script>
 {% endblock %}
