@@ -294,10 +294,12 @@ document.getElementById("fileInput-plc").addEventListener("change", (event) => {
     const reader = new FileReader();
     reader.onload = function (e) {
         const data = new Uint8Array(e.target.result);
+        dfJson = {};
         const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheet = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheet];
-        dfJson = XLSX.utils.sheet_to_json(worksheet);
+        workbook.SheetNames.forEach(name => {
+            const sheet = workbook.Sheets[name];
+            dfJson[name] = XLSX.utils.sheet_to_json(sheet);
+        });
     };
     reader.readAsArrayBuffer(file);
 });
