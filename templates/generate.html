@@ -337,13 +337,29 @@ document.querySelectorAll('#plc-tab .generate-block-row').forEach((block, index)
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message || "Generation complete.");
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || "Server error"); });
+            }
+
+            const disposition = response.headers.get("Content-Disposition");
+            const filenameMatch = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
+            const filename = filenameMatch ? filenameMatch[1].replace(/['"]/g, '') : "download.awl";
+
+            return response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            });
         })
         .catch(err => {
+            alert("Error: " + err.message);
             console.error(err);
-            alert("Error occurred during generation.");
         });
     });
 });
