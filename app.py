@@ -49,8 +49,6 @@ def generate_fb():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
-    if not isinstance(df_data, dict) or selection_module not in df_data:
-        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
@@ -76,8 +74,6 @@ def generate_db():
     if not nr or not selection_module:
         return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
 
-    if not isinstance(df_data, dict) or selection_module not in df_data:
-        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
@@ -112,17 +108,21 @@ def generate_textlist():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
-    if not isinstance(df_data, dict) or selection_module not in df_data:
-        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
     
-    file_path = plc._exportPlcTextlistSie(nr, selection_module, df)
+    file_result = plc._exportPlcTextlistSie(nr, selection_module, df)
 
-    if not file_path or not os.path.exists(file_path):
+    # 🔍 Check if an error dictionary was returned
+    if isinstance(file_result, dict) and file_result.get("status") == "error":
+        return jsonify(file_result), 500
+
+    file_path = file_result  # This is a string if successful
+
+    if not isinstance(file_path, str) or not os.path.exists(file_path):
         return jsonify({"status": "error", "message": "File generation failed."}), 500
 
     return send_file(file_path, as_attachment=True, download_name=os.path.basename(file_path))
