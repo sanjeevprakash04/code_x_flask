@@ -49,10 +49,14 @@ def generate_fb():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
+        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
+        return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
         return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
 
     file_path = plc._exportLogixRungsSie(nr, selection_module, df)
@@ -76,10 +80,14 @@ def generate_db():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
+        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
+        return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
 
     file_path = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
@@ -101,10 +109,14 @@ def generate_textlist():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
+        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
+        return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
 
     file_path = plc._exportPlcTextlistSie(nr, selection_module, df)
