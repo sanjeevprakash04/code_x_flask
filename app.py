@@ -54,9 +54,7 @@ def generate_fb():
 
     try:
         df = pd.DataFrame(df_data[selection_module])
-        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
-        return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
         return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
 
     file_path = plc._exportLogixRungsSie(nr, selection_module, df)
@@ -85,16 +83,21 @@ def generate_db():
 
     try:
         df = pd.DataFrame(df_data[selection_module])
-        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
-        return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
 
-    file_path = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
+    file_info = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
+    print("done")
+    print(file_info, type(file_info))
+    # If file_info is dict, extract path
+    if isinstance(file_info, dict):
+        file_path = file_info.get("filepath") or file_info.get("file_path") or file_info.get("filename")
+    else:
+        file_path = file_info
 
     if not file_path or not os.path.exists(file_path):
         return jsonify({"status": "error", "message": "File generation failed."}), 500
-
+    print("Done")
     return send_file(file_path, as_attachment=True, download_name=os.path.basename(file_path))
 
 @app.route('/generate/textlist', methods=['POST'])
@@ -114,11 +117,9 @@ def generate_textlist():
 
     try:
         df = pd.DataFrame(df_data[selection_module])
-        df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
-        return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
-
+    
     file_path = plc._exportPlcTextlistSie(nr, selection_module, df)
 
     if not file_path or not os.path.exists(file_path):
