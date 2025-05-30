@@ -49,6 +49,8 @@ def generate_fb():
 
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
     try:
         df = pd.DataFrame(df_data[selection_module])
@@ -74,6 +76,8 @@ def generate_db():
     if not nr or not selection_module:
         return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
 
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
@@ -106,6 +110,8 @@ def generate_textlist():
     if not nr or not selection_module:
         return jsonify({"status": "error", "message": "PLC number or module name is missing."}), 400
 
+    if not isinstance(df_data, dict) or selection_module not in df_data:
+        return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
     if not isinstance(df_data, dict) or selection_module not in df_data:
         return jsonify({"status": "error", "message": f"'{selection_module}' sheet not found in Excel."}), 400
 
