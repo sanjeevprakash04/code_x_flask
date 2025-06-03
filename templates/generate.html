@@ -69,13 +69,12 @@
             <div class="generate-block-row">
                 <label>Generate PLC Function blocks</label>
                 <div class="generate-input-group" style="margin-left: 8rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
-                    <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
+                    <button class="generate-icon-btn generate-fb"><i class='bx bx-share'></i></button>
                 </div>
             </div>
             <div class="generate-block-row">
@@ -85,25 +84,23 @@
                     <label for="optDB" style="font-size: 0.9rem; font-weight: 600;">Optimized DB</label>
                 </div>
                 <div class="generate-input-group" style="margin-left: 1.9rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
-                    <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
+                    <button class="generate-icon-btn generate-db"><i class='bx bx-share'></i></button>
                 </div>
             </div>
             <div class="generate-block-row">
                 <label>Generate PLC Textlists</label>
                 <div class="generate-input-group" style="margin-left: 11.4rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
-                    <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
+                    <button class="generate-icon-btn generate-textlist"><i class='bx bx-share'></i></button>
                 </div>
             </div>
         </div>
@@ -119,11 +116,10 @@
             <div class="generate-block-row">
                 <label>Generate HMI Tag</label>
                 <div class="generate-input-group" style="margin-left: 13.5rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -131,11 +127,10 @@
             <div class="generate-block-row">
                 <label>Generate HMI Textlists</label>
                 <div class="generate-input-group" style="margin-left: 11.5rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -153,11 +148,10 @@
             <div class="generate-block-row">
                 <label>Export SQL Database File</label>
                 <div class="generate-input-group" style="margin-left: 10rem;">
-                    <select class="generate-select-small">
-                        <option value="">None</option>
-                        {% for func in function_list %}
-                        <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
-                        {% endfor %}
+                    <select class="generate-select-multi" multiple="multiple" >
+                        {% for func in function_list %} 
+                        <option value="{{ func['FunctionName'] }}">{{ func['FunctionName'] }}</option> 
+                        {% endfor %} 
                     </select>
                     <button class="generate-icon-btn"><i class='bx bx-share'></i></button>
                 </div>
@@ -280,88 +274,99 @@
     });
 </script>
 
-<!-- SheetJS to parse Excel -->
+<!-- SheetJS to parse Excel --> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-<script>
-let dfJson = null;
-
-// PLC Excel parsing using SheetJS
-document.getElementById("fileInput-plc").addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        dfJson = {};
-        const workbook = XLSX.read(data, { type: 'array' });
-        workbook.SheetNames.forEach(name => {
-            const sheet = workbook.Sheets[name];
-            dfJson[name] = XLSX.utils.sheet_to_json(sheet);
-        });
-    };
-    reader.readAsArrayBuffer(file);
-});
-
-// Button click handlers for Function Block, DB, Textlist
-document.querySelectorAll('#plc-tab .generate-block-row').forEach((block, index) => {
-    const button = block.querySelector('.generate-icon-btn');
-    const select = block.querySelector('select');
-
-    button.addEventListener('click', () => {
-        const plcNr = document.getElementById('plcNumber').value.trim();
-        const functionId = select.value;
-        const optimized = document.getElementById('optDB')?.checked || false;
-
-        if (!plcNr || !functionId) return alert("Please select function and enter PLC Number.");
-        if (!dfJson) return alert("Please upload and parse a PLC Excel file first.");
-
-        // Get FunctionName from selected option text
-        const functionName = select.options[select.selectedIndex].text;
-
-        const payload = {
-            plc_nr: plcNr,
-            selection_module: functionName,
-            df_data: dfJson,
-            cmd_optimized_db: optimized
-        };
-
-        let endpoint = "";
-        if (index === 0) endpoint = "/generate/fb";
-        if (index === 1) endpoint = "/generate/db";
-        if (index === 2) endpoint = "/generate/textlist";
-
-        fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.message || "Server error"); });
-            }
-
-            const disposition = response.headers.get("Content-Disposition");
-            const filenameMatch = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
-            const filename = filenameMatch ? filenameMatch[1].replace(/['"]/g, '') : "download.awl";
-
-            return response.blob().then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            });
-        })
-        .catch(err => {
-            alert("Error: " + err.message);
-            console.error(err);
-        });
-    });
-});
+ 
+<script> 
+    let dfJson = null; 
+    document.getElementById("fileInput-plc").addEventListener("change", (event) => { 
+        const file = event.target.files[0]; 
+        if (!file) return; 
+        const reader = new FileReader(); 
+        reader.onload = function (e) { 
+            const data = new Uint8Array(e.target.result); 
+            const workbook = XLSX.read(data, { type: 'array' }); 
+            dfJson = {}; 
+            workbook.SheetNames.forEach(name => { 
+                const sheet = workbook.Sheets[name]; 
+                dfJson[name] = XLSX.utils.sheet_to_json(sheet); 
+            }); 
+        }; 
+        reader.readAsArrayBuffer(file); 
+    }); 
+    function downloadBlob(blob, filename) { 
+        const url = window.URL.createObjectURL(blob); 
+        const a = document.createElement("a"); 
+        a.href = url; 
+        a.download = filename; 
+        document.body.appendChild(a); 
+        a.click(); 
+        a.remove(); 
+        window.URL.revokeObjectURL(url); 
+    } 
+    function handleGenerate(endpoint, selectElem, extra = {}) { 
+        const plcNr = document.getElementById("plcNumber").value.trim(); 
+        if (!plcNr) return alert("Please enter PLC Number."); 
+        if (!dfJson) return alert("Please upload and parse a PLC Excel file first."); 
+        const selectedOptions = $(selectElem).val(); 
+        // Select2 returns array 
+        if (!selectedOptions || selectedOptions.length === 0) { 
+            return alert("Select at least one function."); 
+        } 
+        selectedOptions.forEach(module => { 
+            if (!(module in dfJson)) { 
+                alert(`Excel sheet for module "${module}" not found.`); 
+                return; 
+            } 
+            const payload = { 
+                plc_nr: plcNr, 
+                selection_module: module, 
+                df_data: dfJson, 
+                ...extra 
+            }; 
+            fetch(endpoint, { 
+                method: "POST", 
+                headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify(payload) 
+            }) 
+            .then(response => { 
+                if (!response.ok) { 
+                    return response.json().then(err => { 
+                        throw new Error(err.message || "Server error"); 
+                    }); 
+                } 
+                const disposition = response.headers.get("Content-Disposition"); 
+                const filenameMatch = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition); 
+                const filename = filenameMatch ? filenameMatch[1].replace(/['"]/g, '') : `${module}.awl`; 
+                return response.blob().then(blob => downloadBlob(blob, filename)); 
+            }) 
+            .catch(err => { 
+                console.error(err); 
+                alert("Error: " + err.message); 
+            }); 
+        }); 
+    } 
+    document.addEventListener("DOMContentLoaded", function () { 
+        $('.generate-select-multi').select2({ 
+            placeholder: "-- Select --", 
+            allowClear: true, width: 'resolve' 
+        }); 
+        document.querySelector('.generate-fb').addEventListener("click", () => { 
+            const select = document.querySelectorAll('.generate-block-row')[0].querySelector("select"); 
+            handleGenerate("/generate/fb", select); 
+        }); 
+        document.querySelector('.generate-db').addEventListener("click", () => { 
+            const select = document.querySelectorAll('.generate-block-row')[1].querySelector("select"); 
+            const optimized = document.getElementById("optDB").checked; 
+            handleGenerate("/generate/db", select, { 
+                cmd_optimized_db: optimized 
+            }); 
+        }); 
+        document.querySelector('.generate-textlist').addEventListener("click", () => { 
+            const select = document.querySelectorAll('.generate-block-row')[2].querySelector("select"); 
+            handleGenerate("/generate/textlist", select); 
+        }); 
+    }); 
 </script>
+
 {% endblock %}

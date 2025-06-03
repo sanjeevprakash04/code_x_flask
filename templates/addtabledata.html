@@ -3,7 +3,6 @@
 {% block config_addtabledata %}
 <div style="display: flex; justify-content: right; margin-top: 1rem;">
     <select class="table-select" id="function-select">
-        <option value="all">All</option>
         {% for func in function_list %}
         <option value="{{ func['Id'] }}">{{ func['FunctionName'] }}</option>
         {% endfor %}
@@ -158,29 +157,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleInsertButton() {
         const selectedValue = select.value;
-        if (selectedValue === "all") {
-            addButton.disabled = true;
-            addButton.title = "Select a specific Function to insert data";
-        } else {
-            addButton.disabled = !userLoggedIn;
-            addButton.title = userLoggedIn ? "" : "Login to add";
-        }
+        addButton.disabled = !userLoggedIn;
+        addButton.title = userLoggedIn ? "" : "Login to add";
     }
 
     // Initial button state
     toggleInsertButton();
 
     // Dropdown change
-    select.addEventListener("change", () => {
-        const selectedId = select.value;
-
-        fetch(`/configuration/add/${selectedId}`)
-            .then(res => res.json())
-            .then(data => {
-                tableWrapper.innerHTML = data.html;
-                addActionColumn();
-                toggleInsertButton();
-            });
+    function fetchFunctionData(functionId) { 
+        fetch(`/configuration/add/${functionId}`) 
+        .then(res => res.json()) 
+        .then(data => { 
+            tableWrapper.innerHTML = data.html; addActionColumn(); 
+        }); 
+    } 
+    
+    // Load first function's data on page load 
+    if (select.options.length > 0) { 
+        const firstValue = select.options[0].value; select.value = firstValue; 
+        fetchFunctionData(firstValue); 
+    } 
+    select.addEventListener("change", () => { 
+        fetchFunctionData(select.value); 
     });
 
     // Add action column on page load
