@@ -1019,12 +1019,12 @@ th {
     gap: 1rem;
 }
 
-.generate-select-small {
+.generate-select-multi {
     padding: 0.4rem;
     font-size: 0.9rem;
     border: 1px solid #bbb;
     border-radius: 0.3rem;
-    width: 10rem;
+    width: 20rem;
 }
 
 .generate-icon-btn {
