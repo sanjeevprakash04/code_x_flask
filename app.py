@@ -7,21 +7,52 @@ import pandas as pd
 from threading import Thread
 import os, signal, atexit
 
-from auth import authLog
+from auth import authLog, authMac
 from config import sqliteConfig
 from modules import main, tableConfig
 from siemens import plc, hmi, scada
+from modules.logs import log_user_activity
 
 app = Flask(__name__)
 app.secret_key = '4f3d6e9a5f4b1c8d7e6a2b3c9d0e8f1a5b7c2d4e6f9a1b3c8d0e6f2a9b1d3c4'
 
+def is_activated():
+    try:
+        conn = sqliteConfig.get_db_connection_engine()
+        df = pd.read_sql_query('SELECT * FROM "Info_DB"', con=conn)
+        
+        activation_row = df.loc[df['Particulars'] == 'Activation_Key', 'Info']
+        
+        if activation_row.empty:
+            return False
+        
+        activation_key = activation_row.values[0]
+        return bool(activation_key and str(activation_key).strip())
+    except Exception as e:
+        print("Activation check error:", e)
+        return False
+    
 @app.route('/')
+def index():
+    if not is_activated():
+        return render_template('activation.html')
+    return redirect(url_for('home'))
+
 @app.route('/home')
 def home():
     if 'username' in session:
         return redirect(url_for('dashboard', user=session['username'], role=session.get('role')))
-    else:
-        return redirect(url_for('dashboard'))
+    return redirect(url_for('dashboard'))
+
+@app.route('/activate_license', methods=['POST'])
+def activate_license():
+    data = request.get_json()
+    license_key = data.get('licenseKey')
+
+    result = authMac.mac_insert(license_key)
+    success = result and "successfully updated" in result.lower()
+
+    return jsonify(success=success, message=result)
 
 @app.route('/dashboard')
 def dashboard():
@@ -29,7 +60,8 @@ def dashboard():
 
 @app.route('/logs')
 def logs():
-    return render_template('logs.html')
+    logs = session.get('user_logs', [])
+    return render_template('logs.html', logs=logs)
 
 @app.route('/generate')
 def generate():
@@ -55,7 +87,7 @@ def generate_fb():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
 
-    file_path = plc._exportLogixRungsSie(nr, selection_module, df)
+    file_path = plc._exportLogixRungsSie(nr, selection_module, df) 
     
     if not file_path or not os.path.exists(file_path):
         return jsonify({"status": "error", "message": "File generation failed."}), 500
@@ -294,6 +326,8 @@ def login():
         session.permanent = True
         session['username'] = user[1]
         session['role'] = user[3]
+        session['user_logs'] = []
+        log_user_activity(f"{username} logged in")
         return jsonify(success=True)
     else:
         return jsonify(success=False, error="Invalid Credentials"), 403
@@ -345,6 +379,7 @@ def change_password():
 
 @app.route('/logout')
 def logout():
+    log_user_activity("User logged out")
     session.clear()
     return redirect(url_for('home'))
 
