@@ -412,7 +412,8 @@ body {
 
 .logs-page {
     background-color: #fff;
-    padding-left: 0.7rem;
+    padding-top: 0.5rem;
+    padding-left: 1rem;
     height: 77vh;
     width: 100%;
     border: 1px solid #ccc;
@@ -426,14 +427,11 @@ body {
     border-radius: 0.3rem;
     box-shadow: 0 0 3px rgba(0,0,0,0.5);
     min-height: 81.5vh;
+    overflow: auto;
 }
 
-.log-list {
-  list-style-type: none;
-  border-radius: 8px;
-}
-.log-list li {
-  margin: 0.5rem 0;
+.logs-content p {
+    margin: 0.5rem 0.5rem;
 }
 
 .license-modal {

@@ -67,6 +67,7 @@ def logs():
 def generate():
     df = main.tbl_fun_View()
     function_list = df[['Id', 'FunctionName']].to_dict(orient='records')
+    log_user_activity("Accessed Generate Page")
     return render_template('generate.html', function_list=function_list)
 
 @app.route('/generate/fb', methods=['POST'])

@@ -1,7 +1,7 @@
 import pandas as pd
 from config import sqliteConfig
 from modules import main
-
+from modules import logs
 # Siemens code generators
 from model.siemens.tia_code import app_generate_cm_db, app_generate_CM_fb
 from model.siemens.tia_textlists import app_plc_textlists
@@ -37,7 +37,7 @@ def _exportLogixRungsSie(nr, selection_module, df):
         file_path = app_generate_CM_fb.functionBlock(
             f"All_CM_{selection_module}", description, selection_module, nr, df, df_template
         )
-
+        logs.log_user_activity("The Function Block File Exported")
         return file_path
 
     except Exception as e:
@@ -73,6 +73,7 @@ def _exportTiaDbSie(nr, selection_module, df, cmd_optimized_db):
             df=df,
             nr=nr
         )
+        logs.log_user_activity("The DataBase File Exported")
 
         return  file_path
 
@@ -86,6 +87,7 @@ def _exportPlcTextlistSie(nr, selection_module, df):
 
     try:
         file_path = app_plc_textlists.GeneratePlcTextlists(df, nr, selection_module, 'CM_Item_')
+        logs.log_user_activity("The Textlist File Exported")
         return file_path
 
     except Exception as e:
