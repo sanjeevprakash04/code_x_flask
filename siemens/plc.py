@@ -37,7 +37,7 @@ def _exportLogixRungsSie(nr, selection_module, df):
         file_path = app_generate_CM_fb.functionBlock(
             f"All_CM_{selection_module}", description, selection_module, nr, df, df_template
         )
-        logs.log_user_activity("The Function Block File Exported")
+        logs.log_user_activity("The PLC Function Block File Exported")
         return file_path
 
     except Exception as e:
@@ -73,7 +73,7 @@ def _exportTiaDbSie(nr, selection_module, df, cmd_optimized_db):
             df=df,
             nr=nr
         )
-        logs.log_user_activity("The DataBase File Exported")
+        logs.log_user_activity("The PLC DataBase File Exported")
 
         return  file_path
 
@@ -87,7 +87,7 @@ def _exportPlcTextlistSie(nr, selection_module, df):
 
     try:
         file_path = app_plc_textlists.GeneratePlcTextlists(df, nr, selection_module, 'CM_Item_')
-        logs.log_user_activity("The Textlist File Exported")
+        logs.log_user_activity("The PLC Textlist File Exported")
         return file_path
 
     except Exception as e:

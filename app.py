@@ -63,12 +63,21 @@ def logs():
     logs = session.get('user_logs', [])
     return render_template('logs.html', logs=logs)
 
+@app.route('/log_action', methods=['POST'])
+def log_action():
+    data = request.get_json()
+    message = data.get('message')
+    if message:
+        log_user_activity(message)
+        return jsonify(success=True)
+    return jsonify(success=False, error="Missing message"), 400
+
 @app.route('/generate')
 def generate():
+    user_logged_in = 'username' in session
     df = main.tbl_fun_View()
     function_list = df[['Id', 'FunctionName']].to_dict(orient='records')
-    log_user_activity("Accessed Generate Page")
-    return render_template('generate.html', function_list=function_list)
+    return render_template('generate.html', function_list=function_list, user_logged_in=user_logged_in)
 
 @app.route('/generate/fb', methods=['POST'])
 def generate_fb():
