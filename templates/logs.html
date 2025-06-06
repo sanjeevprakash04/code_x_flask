@@ -8,11 +8,9 @@
 <div class="logs-content">
     <div class="logs-page">
         {% if logs %}
-            <ul class="log-list">
             {% for log in logs %}
-                <li>{{ log }}</li>
+                <p>{{ log }}</p>
             {% endfor %}
-            </ul>
         {% else %}
             <p>No activity logs available</p>
         {% endif %}
