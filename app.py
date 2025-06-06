@@ -337,7 +337,7 @@ def login():
         session['username'] = user[1]
         session['role'] = user[3]
         session['user_logs'] = []
-        log_user_activity(f"{username} logged in")
+        log_user_activity(f"Welcome to CodeX {username}")
         return jsonify(success=True)
     else:
         return jsonify(success=False, error="Invalid Credentials"), 403
