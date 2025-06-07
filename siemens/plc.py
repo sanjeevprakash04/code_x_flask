@@ -2,14 +2,13 @@ import pandas as pd
 from config import sqliteConfig
 from modules import main
 from modules import logs
-# Siemens code generators
 from model.siemens.tia_code import app_generate_cm_db, app_generate_CM_fb
 from model.siemens.tia_textlists import app_plc_textlists
 
 # ---------- Export Function Block (FB) ----------
 def _exportLogixRungsSie(nr, selection_module, df):
     if not nr:
-        return None
+        return {"status": "error", "message": "Please enter PLC NR."}
 
     try:
         cursor_read, cursor_write, engine_read, engine_write, conn = sqliteConfig.sqlite()
@@ -32,18 +31,17 @@ def _exportLogixRungsSie(nr, selection_module, df):
 
         description = df_functions.loc[
             df_functions['FunctionName'] == selection_module, 'FunctionDescription'
-        ].values[0] if selection_module in df_functions['FunctionName'].values else None
+        ].values[0] if selection_module in df_functions['FunctionName'].values else ""
 
         file_path = app_generate_CM_fb.functionBlock(
             f"All_CM_{selection_module}", description, selection_module, nr, df, df_template
         )
+
         logs.log_user_activity("The PLC Function Block File Exported")
         return file_path
 
     except Exception as e:
-        print(f"Export error: {e}")
-        return None
-
+        return {"status": "error", "message": f"An error occurred while exporting rungs: {str(e)}"}
 
 def _exportTiaDbSie(nr, selection_module, df, cmd_optimized_db):
     if not nr:
@@ -73,13 +71,12 @@ def _exportTiaDbSie(nr, selection_module, df, cmd_optimized_db):
             df=df,
             nr=nr
         )
-        logs.log_user_activity("The PLC DataBase File Exported")
 
-        return  file_path
+        logs.log_user_activity("The PLC DataBlock File Exported")
+        return file_path
 
     except Exception as e:
         return {"status": "error", "message": f"An error occurred while exporting DB: {str(e)}"}
-
 
 def _exportPlcTextlistSie(nr, selection_module, df):
     if not nr:
@@ -91,5 +88,4 @@ def _exportPlcTextlistSie(nr, selection_module, df):
         return file_path
 
     except Exception as e:
-        return {"status": "error", "message": f"An error occurred while exporting text list: {str(e)}"}
-
+        return {"status": "error", "message": f"An error occurred while exporting Textlist: {str(e)}"}

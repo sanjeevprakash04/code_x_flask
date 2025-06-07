@@ -97,13 +97,16 @@ def generate_fb():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error loading sheet: {str(e)}"}), 500
 
-    file_path = plc._exportLogixRungsSie(nr, selection_module, df) 
-    
+    result = plc._exportLogixRungsSie(nr, selection_module, df)
+
+    if isinstance(result, dict) and result.get("status") == "error":
+        return jsonify(result), 500
+
+    file_path = result
     if not file_path or not os.path.exists(file_path):
-        return jsonify({"status": "error", "message": "File generation failed."}), 500
+        return jsonify({"status": "error", "message": "File path not found or file missing."}), 500
 
     return send_file(file_path, as_attachment=True, download_name=os.path.basename(file_path))
-
 
 @app.route('/generate/db', methods=['POST'])
 def generate_db():
@@ -124,18 +127,16 @@ def generate_db():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
 
-    file_info = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
-    print("done")
-    print(file_info, type(file_info))
-    # If file_info is dict, extract path
-    if isinstance(file_info, dict):
-        file_path = file_info.get("filepath") or file_info.get("file_path") or file_info.get("filename")
-    else:
-        file_path = file_info
+    result = plc._exportTiaDbSie(nr, selection_module, df, cmd_optimized_db)
+
+    if isinstance(result, dict) and result.get("status") == "error":
+        return jsonify(result), 500
+
+    file_path = result if isinstance(result, str) else result.get("file_path") or result.get("filename") or result.get("filepath")
 
     if not file_path or not os.path.exists(file_path):
-        return jsonify({"status": "error", "message": "File generation failed."}), 500
-    print("Done")
+        return jsonify({"status": "error", "message": "File path not found or file missing."}), 500
+
     return send_file(file_path, as_attachment=True, download_name=os.path.basename(file_path))
 
 @app.route('/generate/textlist', methods=['POST'])
@@ -155,17 +156,15 @@ def generate_textlist():
         df = pd.DataFrame(df_data[selection_module])
     except Exception as e:
         return jsonify({"status": "error", "message": f"Error converting sheet to DataFrame: {str(e)}"}), 500
-    
-    file_result = plc._exportPlcTextlistSie(nr, selection_module, df)
 
-    # 🔍 Check if an error dictionary was returned
-    if isinstance(file_result, dict) and file_result.get("status") == "error":
-        return jsonify(file_result), 500
+    result = plc._exportPlcTextlistSie(nr, selection_module, df)
 
-    file_path = file_result  # This is a string if successful
+    if isinstance(result, dict) and result.get("status") == "error":
+        return jsonify(result), 500
 
+    file_path = result
     if not isinstance(file_path, str) or not os.path.exists(file_path):
-        return jsonify({"status": "error", "message": "File generation failed."}), 500
+        return jsonify({"status": "error", "message": "File path not found or file missing."}), 500
 
     return send_file(file_path, as_attachment=True, download_name=os.path.basename(file_path))
 
