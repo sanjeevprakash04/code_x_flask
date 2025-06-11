@@ -194,6 +194,52 @@
 </script>
 
 <script>
+    async function handleFileUpload(files, targetElement) {
+        for (let file of files) {
+            const fileName = file.name;
+            const fileType = fileName.split('.').pop().toLowerCase();
+            const fileSize = (file.size / (1024 * 1024)).toFixed(1) + "MB";
+
+            if ([...targetElement.children].some(item => item.dataset.filename === fileName)) {
+                alert(`${fileName} is already uploaded.`);
+                continue;
+            }
+
+            let iconHTML = '';
+            let iconClass = 'bx bx-file';
+            let iconColor = '#007bff';
+            if (fileType === 'pdf') {
+                iconClass = 'bx bxs-file-pdf';
+                iconColor = '#e74c3c';
+                iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
+            } else if (['xls', 'xlsx'].includes(fileType)) {
+                iconHTML = `<img src="/static/icons/excel.png" alt="Excel" style="width: 24px; height: 24px; margin-right: 10px;">`;
+            } else {
+                iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
+            }
+
+            const fileItem = document.createElement("div");
+            fileItem.classList.add("file-item");
+            fileItem.dataset.filename = fileName;
+            fileItem.innerHTML = `
+                ${iconHTML}
+                <div class="file-details">
+                    <div class="file-name">${fileName}</div>
+                    <div class="file-size">${fileSize}</div>
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+                <button class="remove-btn">×</button>
+            `;
+
+            targetElement.appendChild(fileItem);
+
+            logUploadAction(file);
+
+            fileItem.querySelector(".remove-btn").addEventListener("click", () => {
+                targetElement.removeChild(fileItem);
+            });
+        }
+    }
     document.addEventListener("DOMContentLoaded", () => {
         const sections = ["plc", "hmi", "scada"];
 
@@ -245,51 +291,7 @@
                 handleFileUpload(fileInput.files, uploadedFiles);
             });
         });
-
-        function handleFileUpload(files, targetElement) {
-            for (let file of files) {
-                const fileName = file.name;
-                const fileType = fileName.split('.').pop().toLowerCase();
-                const fileSize = (file.size / (1024 * 1024)).toFixed(1) + "MB";
-
-                if ([...targetElement.children].some(item => item.dataset.filename === fileName)) {
-                    alert(`${fileName} is already uploaded.`);
-                    continue;
-                }
-
-                let iconHTML = '';
-                let iconClass = 'bx bx-file';
-                let iconColor = '#007bff';
-                if (fileType === 'pdf') {
-                    iconClass = 'bx bxs-file-pdf';
-                    iconColor = '#e74c3c';
-                    iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
-                } else if (['xls', 'xlsx'].includes(fileType)) {
-                    iconHTML = `<img src="/static/icons/excel.png" alt="Excel" style="width: 24px; height: 24px; margin-right: 10px;">`;
-                } else {
-                    iconHTML = `<i class="${iconClass}" style="font-size: 1.8rem; color: ${iconColor}; margin-right: 10px;"></i>`;
-                }
-
-                const fileItem = document.createElement("div");
-                fileItem.classList.add("file-item");
-                fileItem.dataset.filename = fileName;
-                fileItem.innerHTML = `
-                    ${iconHTML}
-                    <div class="file-details">
-                        <div class="file-name">${fileName}</div>
-                        <div class="file-size">${fileSize}</div>
-                        <div class="progress-bar"><div class="progress-fill"></div></div>
-                    </div>
-                    <button class="remove-btn">×</button>
-                `;
-
-                targetElement.appendChild(fileItem);
-
-                fileItem.querySelector(".remove-btn").addEventListener("click", () => {
-                    targetElement.removeChild(fileItem);
-                });
-            }
-        }
+        handleFileUpload(files, targetElement);
     });
 </script>
 
