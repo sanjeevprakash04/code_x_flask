@@ -298,6 +298,16 @@
  
 <script> 
     let dfJson = null; 
+    function logUploadAction(file) {
+        // ✅ Separate upload log
+        fetch("/log_action", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: `Uploaded the file ${file.name}`
+            })
+        });
+    }
     document.getElementById("fileInput-plc").addEventListener("change", (event) => { 
         const file = event.target.files[0]; 
         if (!file) return; 
@@ -311,13 +321,7 @@
                 dfJson[name] = XLSX.utils.sheet_to_json(sheet); 
             });
             // ✅ Log file upload as separate log per file
-            fetch("/log_action", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    message: `Uploaded the file ${file.name}`
-                })
-            });
+            logUploadAction(file);
         }; 
         reader.readAsArrayBuffer(file); 
     }); 
